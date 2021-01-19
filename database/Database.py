@@ -32,6 +32,7 @@ def insertUser(name, psd):
     print(cursor)
     con.commit()
 
+
 def seaUser(name):
     search = "select 1 from " + Table + " where name=" + "'" + name + "'" + " limit 1"
     cursor.execute(search)

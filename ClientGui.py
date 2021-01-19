@@ -7,33 +7,34 @@ import threading
 # 定义套接字
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+
 class cliGUI:
     def __init__(self):
-        #创建窗口
-        self.app=Tk()
+        # 创建窗口
+        self.app = Tk()
         self.app.title("python聊天客户端窗口")
 
-        #创建frame容器
-        self.frameLT=Frame(width=500,height=320,bg='white')
-        self.frameLC=Frame(width=500,height=150,bg='white')
-        self.frameLB=Frame(width=500,height=30)
-        self.frameR=Frame(width=200,height=500)
+        # 创建frame容器
+        self.frameLT = Frame(width=500, height=320, bg='white')
+        self.frameLC = Frame(width=500, height=150, bg='white')
+        self.frameLB = Frame(width=500, height=30)
+        self.frameR = Frame(width=200, height=500)
 
-        #窗口布局
-        self.frameLT.grid(row=0,column=0,columnspan=2,padx=1,pady=3)
-        self.frameLC.grid(row=1,column=0,columnspan=2,padx=1,pady=3)
-        self.frameLB.grid(row=2,column=0,columnspan=2)
-        self.frameR.grid(row=0,column=2,rowspan=3,padx=2,pady=3)
+        # 窗口布局
+        self.frameLT.grid(row=0, column=0, columnspan=2, padx=1, pady=3)
+        self.frameLC.grid(row=1, column=0, columnspan=2, padx=1, pady=3)
+        self.frameLB.grid(row=2, column=0, columnspan=2)
+        self.frameR.grid(row=0, column=2, rowspan=3, padx=2, pady=3)
 
-        #固定大小 grid_propagate表示不会根据内部容件的大小而改变
+        # 固定大小 grid_propagate表示不会根据内部容件的大小而改变
         self.frameLT.grid_propagate(0)
         self.frameLC.grid_propagate(0)
         self.frameLB.grid_propagate(0)
         self.frameR.grid_propagate(0)
 
-        self.txtMsgList=Text(self.frameLT)
-        #创建tag
-        self.txtMsgList.tag_config('greencolor',foreground='#008C00')
+        self.txtMsgList = Text(self.frameLT)
+        # 创建tag
+        self.txtMsgList.tag_config('greencolor', foreground='#008C00')
         self.txtMsgList.grid()
 
         self.txtMsg = Text(self.frameLC)
@@ -52,11 +53,11 @@ class cliGUI:
         # 主事件循环
         self.app.mainloop()
 
-    #python中按键触发事件属于回调函数，需要写在函数内部
+    # python中按键触发事件属于回调函数，需要写在函数内部
     # 连接服务器   多线程发送消息
     def con(self):
-        s.connect(('127.0.0.1',9999))
-        threadCli=threading.Thread(target=self.threadBody,name='Client')
+        s.connect(('127.0.0.1', 9999))
+        threadCli = threading.Thread(target=self.threadBody, name='Client')
         threadCli.start()
         return
 
@@ -67,10 +68,9 @@ class cliGUI:
             if len(data) != 0:
                 strMsg = "服务端：" + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + '\n'
                 recmsg = data.decode()
-                self.txtMsgList.insert(END, strMsg,'greencolor')
+                self.txtMsgList.insert(END, strMsg, 'greencolor')
                 self.txtMsgList.insert(END, recmsg)
                 time.sleep(1)
-
 
     def sendMsg(self):
         # 显示已经发送的内容
@@ -83,15 +83,15 @@ class cliGUI:
         # 发送消息
         s.send(msg.encode())
 
-    #绑定事件发送消息
-    def sendMsgEvent(self,event):
-        if event.keysym=='Up':
+    # 绑定事件发送消息
+    def sendMsgEvent(self, event):
+        if event.keysym == 'Up':
             self.sendMsg()
 
-    #取消发送
+    # 取消发送
     def cancelMsg(self):
-        self.txtMsg.delete('0.0',END)
+        self.txtMsg.delete('0.0', END)
 
 
 if __name__ == '__main__':
-    cligui=cliGUI()
+    cligui = cliGUI()

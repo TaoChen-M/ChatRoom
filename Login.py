@@ -1,4 +1,4 @@
-#创建聊天室的登陆界面
+# 创建聊天室的登陆界面
 import tkinter.messagebox
 
 from ClientGui import cliGUI
@@ -9,7 +9,7 @@ from database.Database import seaUser
 
 class Login:
     def __init__(self):
-        self.app=Tk()
+        self.app = Tk()
         self.app.title("欢迎使用c-chat")
 
         # 创建Frame控件
@@ -31,14 +31,14 @@ class Login:
         Label(self.frameC, text="账号").grid(row=0, column=0)
         Label(self.frameC, text="密码").grid(row=1, column=0)
 
-        self.user=Entry(self.frameC)
+        self.user = Entry(self.frameC)
         self.user.grid(row=0, column=1)
-        self.psd=Entry(self.frameC, show='*')
+        self.psd = Entry(self.frameC, show='*')
         self.psd.grid(row=1, column=1)
 
         # Button
         loginbtn = Button(self.frameB, text="登录", width=8, command=self.logincmd).grid(row=0, column=0)
-        registerbtn = Button(self.frameB, text='注册', width=8,command=self.register).grid(row=0, column=1)
+        registerbtn = Button(self.frameB, text='注册', width=8, command=self.register).grid(row=0, column=1)
 
         self.app.mainloop()
 
@@ -47,14 +47,13 @@ class Login:
         Register()
 
     def logincmd(self):
-        if(seaUser(self.user.get())):
+        if (seaUser(self.user.get())):
             self.app.destroy()
             cliGUI()
         else:
-            tkinter.messagebox.showinfo(title="警告",message="该用户不存在，请注册")
+            tkinter.messagebox.showinfo(title="警告", message="该用户不存在，请注册")
         # serGUI()
 
 
-
 if __name__ == '__main__':
-    login=Login()
+    login = Login()

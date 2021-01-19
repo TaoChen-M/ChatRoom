@@ -2,10 +2,9 @@ from database.Database import insertUser
 from tkinter import *
 
 
-
 class Register:
     def __init__(self):
-        self.app=Tk()
+        self.app = Tk()
         self.app.title("注册界面")
 
         # 创建Frame控件
@@ -22,12 +21,12 @@ class Register:
         # 固定布局
         self.frameT.grid_propagate(0)
 
-        Label(self.frameC, text='昵称').grid(row=0,column=0)
+        Label(self.frameC, text='昵称').grid(row=0, column=0)
         Label(self.frameC, text='密码').grid(row=1, column=0)
 
-        self.user=Entry(self.frameC)
+        self.user = Entry(self.frameC)
         self.user.grid(row=0, column=1)
-        self.psd=Entry(self.frameC, show='*')
+        self.psd = Entry(self.frameC, show='*')
         self.psd.grid(row=1, column=1)
 
         registerbtn = Button(self.frameB, text='注册', width=8, command=self.reg).grid(row=0, column=1)
@@ -36,7 +35,8 @@ class Register:
 
     # 向数据库中保存用户信息
     def reg(self):
-        insertUser(self.user.get(),self.psd.get())
+        insertUser(self.user.get(), self.psd.get())
+
 
 if __name__ == '__main__':
     Register()
