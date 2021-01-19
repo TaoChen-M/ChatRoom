@@ -2,9 +2,10 @@
 import tkinter.messagebox
 
 from ClientGui import cliGUI
-from database.Database import *
-from Resgister import *
+from Resgister import Register
 from tkinter import *
+from database.Database import seaUser
+
 
 class Login:
     def __init__(self):

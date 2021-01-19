@@ -9,8 +9,6 @@
 '''
 
 import mysql.connector as connect
-from Login import *
-from Resgister import *
 
 ''':param
 Host:服务器地址

@@ -2,6 +2,7 @@ from tkinter import *
 import time
 import socket
 import tkinter.messagebox
+import threading
 
 # 定义套接字
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -52,12 +53,24 @@ class cliGUI:
         self.app.mainloop()
 
     #python中按键触发事件属于回调函数，需要写在函数内部
-    # 连接服务器
+    # 连接服务器   多线程发送消息
     def con(self):
         s.connect(('127.0.0.1',9999))
+        threadCli=threading.Thread(target=self.threadBody,name='Client')
+        threadCli.start()
         return
 
-    # 发送消息
+    def threadBody(self):
+        while True:
+            # 接收服务器消息
+            data = s.recv(1024)
+            if len(data) != 0:
+                strMsg = "服务端：" + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + '\n'
+                recmsg = data.decode()
+                self.txtMsgList.insert(END, strMsg,'greencolor')
+                self.txtMsgList.insert(END, recmsg)
+                time.sleep(1)
+
 
     def sendMsg(self):
         # 显示已经发送的内容
@@ -69,13 +82,6 @@ class cliGUI:
 
         # 发送消息
         s.send(msg.encode())
-        #接收服务器消息
-        data=s.recv(1024)
-        if len(data)!=0:
-            strMsg = "服务端：" + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + '\n'
-            recmsg = data.decode()
-            self.txtMsgList.insert(END, strMsg)
-            self.txtMsgList.insert(END,recmsg)
 
     #绑定事件发送消息
     def sendMsgEvent(self,event):

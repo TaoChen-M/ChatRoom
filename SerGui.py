@@ -2,9 +2,13 @@ from tkinter import *
 import time
 import socket
 import tkinter.messagebox
+import threading
+import time
 
 # 定义套接字
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+host='127.0.0.1'
+port=9999
 
 class serGUI:
     def __init__(self):
@@ -52,20 +56,32 @@ class serGUI:
         self.app.mainloop()
 
     #python中按键触发事件属于回调函数，需要写在函数内部
-    #开启服务器
+    #开启服务器   使用多线程方法
     def start(self):
         # 绑定IP和端口
-        s.bind(('127.0.0.1', 9999))
+        s.bind((host, port))
         s.listen(5)
+        print('Servr start at Host:%s,port:%s'%(host,port))
+        print("waiting connection...")
         # print("服务器启动")
         # 返回一个元组，新的socket和客户端地址
         self.con, self.addres = s.accept()
         if True:
             tkinter.messagebox.showinfo(title='连接',message='服务器成功开启')
-        data = self.con.recv(1024)
-        if len(data) != 0:
-            recmsg = "客户端" + data.decode()
-            self.txtMsgList.insert(END,recmsg)
+
+        threadServer=threading.Thread(target=self.threadBody,name='Server')
+        threadServer.start()
+
+    def threadBody(self):
+        while True:
+            data = self.con.recv(1024)
+            if len(data) != 0:
+                strMsg = "客户端：" + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + '\n'
+                recmsg = data.decode()
+                self.txtMsgList.insert(END, strMsg,'greencolor')
+                self.txtMsgList.insert(END,recmsg)
+                time.sleep(1)
+
 
     # 发送消息
     def sendMsg(self):
@@ -75,15 +91,8 @@ class serGUI:
         msg = self.txtMsg.get('0.0', END)
         self.txtMsgList.insert(END, msg)
         self.txtMsg.delete('0.0', END)
-
         # 发送消息
         self.con.send(msg.encode())
-        data=self.con.recv(1024)
-        if len(data) !=0:
-            strMsg = "客户端：" + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + '\n'
-            recmsg = data.decode()
-            self.txtMsgList.insert(END,strMsg)
-            self.txtMsgList.insert(END,recmsg)
 
     #绑定事件发送消息
     def sendMsgEvent(self,event):
@@ -93,9 +102,6 @@ class serGUI:
     #取消发送
     def cancelMsg(self):
         self.txtMsg.delete('0.0',END)
-
-
-
 
 if __name__ == '__main__':
     sergui=serGUI()

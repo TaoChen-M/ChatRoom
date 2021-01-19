@@ -1,5 +1,7 @@
-from database.Database import *
+from database.Database import insertUser
 from tkinter import *
+
+
 
 class Register:
     def __init__(self):
