@@ -32,6 +32,9 @@ Mysql=8.0.22.0
 
 - Socket编程：https://gist.github.com/kevinkindom/108ffd675cb9253f8f71
 - 多线程和多进程：https://muyuuuu.github.io/2020/03/16/multi-process-thread/
+- epoll：https://zhuanlan.zhihu.com/p/63179839
+- epoll在python中的使用：https://blog.csdn.net/wuchuanpingstone/article/details/82964256
+- epoll实现的python聊天室程序：https://blog.csdn.net/weixin_34375233/article/details/89989666
 
 ### 数据库设计
 
