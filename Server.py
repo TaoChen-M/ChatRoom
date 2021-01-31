@@ -43,30 +43,34 @@ class Server:
                     self.message_queues[conn_fd] = Queue()
 
                 elif event & select.EPOLLIN:
-                    # New connection
+                    # Read
                     data = self.connections[fd].recv(1024)
                     if not data:
-                        self.epoll.modify(fd, select.EPOLLHUP)
-                        continue
-                    message = "%s<%s> say: " % (self.addresses[fd][0], str(self.addresses[fd][1])) + \
-                              data.strip().decode('gbk')
-                    for key in self.connections:
-                        if key not in [fd, self.server_socket.fileno()]:
-                            self.message_queues[key].put(message)
-                            self.epoll.modify(key, select.EPOLLOUT)
+                        self.remove(fd)
+                    else:
+                        message = ("%s<%s> say: " % (self.addresses[fd][0], str(self.addresses[fd][1]))).encode() + \
+                                  data.strip()
+                        for key in self.connections:
+                            if key not in [fd, self.server_socket.fileno()]:
+                                self.message_queues[key].put(message)
+                                self.epoll.modify(key, select.EPOLLOUT)
 
                 elif event & select.EPOLLOUT:
+                    # Write
                     while not self.message_queues[fd].is_empty():
-                        self.connections[fd].send(self.message_queues[fd].get().encode('gbk'))
+                        self.connections[fd].send(self.message_queues[fd].get())
                     self.epoll.modify(fd, select.EPOLLIN)
 
                 elif event & select.EPOLLHUP:
-                    print('Client close')
-                    self.epoll.unregister(fd)
-                    self.connections[fd].close()
-                    del self.connections[fd]
-                    del self.addresses[fd]
-                    del self.message_queues[fd]
+                    self.remove(fd)
+
+    def remove(self, fd):
+        print('Client close')
+        self.epoll.unregister(fd)
+        self.connections[fd].close()
+        del self.connections[fd]
+        del self.addresses[fd]
+        del self.message_queues[fd]
 
     def __del__(self):
         self.epoll.unregister(self.server_socket.fileno())
