@@ -9,6 +9,7 @@
 '''
 
 import mysql.connector as connect
+import hashlib
 
 ''':param
 Host:服务器地址
@@ -24,10 +25,14 @@ Table = 'user'
 con = connect.connect(host=Host, user=User, password=Password, database=Database)
 cursor = con.cursor()
 
+md5 = hashlib.md5()
+
 
 def insertUser(name, psd):
+    psd = psd + "mysalt"
+    md5.update(psd.encode(encoding="utf-8"))
     insert = "insert into " + Table + "(name,psd) values(%s,%s)"
-    values = [name, psd]
+    values = [name, md5.hexdigest()]
     cursor.execute(insert, values)
     print(cursor)
     con.commit()
