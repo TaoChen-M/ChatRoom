@@ -4,7 +4,7 @@ import tkinter.messagebox
 from ClientGui import cliGUI
 from Resgister import Register
 from tkinter import *
-from database.Database import seaUser
+from Database import seaUser
 
 
 class Login:

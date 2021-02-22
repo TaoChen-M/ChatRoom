@@ -10,6 +10,7 @@
 
 import mysql.connector as connect
 import hashlib
+from config import Config
 
 ''':param
 Host:服务器地址
@@ -17,12 +18,8 @@ user:用户名
 pass:密码
 database:数据库
 '''
-Host = 'localhost'
-User = 'root'
-Password = '123456'
-Database = 'chatroom'
-Table = 'user'
-con = connect.connect(host=Host, user=User, password=Password, database=Database)
+
+con = connect.connect(host=Config.host, user=Config.user, password=Config.password, database=Config.database)
 cursor = con.cursor()
 
 md5 = hashlib.md5()
@@ -31,7 +28,7 @@ md5 = hashlib.md5()
 def insertUser(name, psd):
     psd = psd + "mysalt"
     md5.update(psd.encode(encoding="utf-8"))
-    insert = "insert into " + Table + "(name,psd) values(%s,%s)"
+    insert = "insert into " + Config.table + "(name,psd) values(%s,%s)"
     values = [name, md5.hexdigest()]
     cursor.execute(insert, values)
     print(cursor)
@@ -39,7 +36,7 @@ def insertUser(name, psd):
 
 
 def seaUser(name):
-    search = "select 1 from " + Table + " where name=" + "'" + name + "'" + " limit 1"
+    search = "select 1 from " + Config.table + " where name=" + "'" + name + "'" + " limit 1"
     cursor.execute(search)
     res = cursor.fetchall()
     return res

@@ -4,6 +4,7 @@ import socket
 import select
 
 from util import Queue
+from AESEncrypt import encryptMsg,decrptMsg
 
 
 class Server:
@@ -50,6 +51,7 @@ class Server:
                     else:
                         message = ("%s<%s> say: " % (self.addresses[fd][0], str(self.addresses[fd][1]))).encode() + \
                                   data.strip()
+
                         for key in self.connections:
                             if key not in [fd, self.server_socket.fileno()]:
                                 self.message_queues[key].put(message)

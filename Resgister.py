@@ -1,4 +1,4 @@
-from database.Database import insertUser
+from Database import insertUser
 from tkinter import *
 
 

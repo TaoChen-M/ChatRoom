@@ -3,6 +3,8 @@ import time
 import socket
 import tkinter.messagebox
 import threading
+from AESEncrypt import encryptMsg,decrptMsg
+
 
 # 定义套接字
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -67,7 +69,9 @@ class cliGUI:
             data = s.recv(1024)
             if len(data) != 0:
                 strMsg = "服务端：" + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + '\n'
-                recmsg = data.decode()
+                # decrypt msg
+                recmsg = decrptMsg(data.decode())
+
                 self.txtMsgList.insert(END, strMsg, 'greencolor')
                 self.txtMsgList.insert(END, recmsg)
                 time.sleep(1)
@@ -80,8 +84,8 @@ class cliGUI:
         self.txtMsgList.insert(END, msg)
         self.txtMsg.delete('0.0', END)
 
-        # 发送消息
-        s.send(msg.encode())
+        # encrypt & send msg
+        s.send(encryptMsg(msg).encode())
 
     # 绑定事件发送消息
     def sendMsgEvent(self, event):
